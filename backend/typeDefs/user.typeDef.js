@@ -33,7 +33,7 @@ type User {
     name:String!
     password:String!
     profilePicture:String
-    gender:String!
+    gender:GenderType!
 }
 
 type Query {
@@ -50,7 +50,7 @@ input SignUpInput {
     username: String!
     name: String!
     password: String!
-    gender: String!
+    gender: GenderType!
 }
 input LoginInput {
     username: String!
@@ -58,6 +58,11 @@ input LoginInput {
 }
 type LogoutResponse {
     messege: String!
+}
+
+enum GenderType {
+    female,
+    male
 }
 `;
 

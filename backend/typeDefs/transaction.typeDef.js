@@ -3,12 +3,12 @@ const transactiontypeDef = `
         _id: ID!
         userId: ID!
         description: String!
-        paymentType: String!
-        category: String!
+        paymentType: paymentType!
+        category: CategoryType!
         amount: Float!
         location: String
         date: String!
-    }
+    }    
 
     type Query {
         transactions: [Transaction!]
@@ -23,8 +23,8 @@ const transactiontypeDef = `
 
     input createTransactionInput {                
         description: String!
-        paymentType: String!
-        category: String!
+        paymentType: paymentType!
+        category: CategoryType!
         amount: Float!
         location: String
         date: String!
@@ -33,11 +33,22 @@ const transactiontypeDef = `
     input updateTransaction {                
         transactionId:ID!
         description: String
-        paymentType: String
-        category: String
+        paymentType: paymentType
+        category: CategoryType
         amount: Float
         location: String
         date: String
+    }
+    
+    enum CategoryType {
+        savings,
+        expense,
+        investment
+    }
+    
+    enum paymentType {
+        card,
+        cash,        
     }
 
 `;
