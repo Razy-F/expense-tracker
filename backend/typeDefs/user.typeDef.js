@@ -36,8 +36,7 @@ type User {
     gender:GenderType!
 }
 
-type Query {
-    users: [User!]
+type Query {    
     authUser: User
     user(userId: ID!):User
 }

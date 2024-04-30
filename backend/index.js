@@ -16,7 +16,9 @@ import { GraphQLLocalStrategy, buildContext } from "graphql-passport";
 import resolvers from "./resolvers/index.js";
 import typeDefs from "./typeDefs/index.js";
 import { connectDB } from "./db/connectDB.js";
+import { configurePassport } from "./passport/passport.config.js";
 
+configurePassport();
 const app = express();
 
 const httpServer = http.createServer(app);
