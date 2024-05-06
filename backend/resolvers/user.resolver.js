@@ -19,7 +19,8 @@ const userResolver = {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const profilePicture = username[0];
+        let profilePicture =
+          username.split(" ")[0].charAt(0) + username.split(" ")[1].charAt(0);
 
         const newUser = new User({
           username,
@@ -37,7 +38,7 @@ const userResolver = {
       }
     },
     login: async (_, { input }, context) => {
-      console.log(context);
+      console.log("hello from login");
       try {
         const { username, password } = input;
         const { user } = await context.authenticate("graphql-local", {
@@ -50,21 +51,21 @@ const userResolver = {
         handleError(error, "login");
       }
     },
-    logout: async (_, _, context) => {
+    logout: async (_, __, context) => {
       try {
         await context.logout();
-        req.session.destroy((err) => {
+        context.req.session.destroy((err) => {
           if (err) throw err;
         });
-        res.clearCookie("connect.sid");
-        return { message: "Logout Successfuly" };
+        context.res.clearCookie("connect.sid");
+        return { messege: "Logout Successfuly" };
       } catch (error) {
         handleError(error, "logout");
       }
     },
   },
   Query: {
-    authUser: async (_, _, context) => {
+    authUser: async (_, __, context) => {
       try {
         const user = await context.getUser();
         return user;

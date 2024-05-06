@@ -1,5 +1,6 @@
 import passport from "passport";
 import bcrypt from "bcryptjs";
+
 import User from "../models/user.model.js";
 import { GraphQLLocalStrategy } from "graphql-passport";
 
@@ -10,19 +11,19 @@ export const configurePassport = async () => {
   });
 
   passport.deserializeUser(async (id, done) => {
-    console.log("deserializing user");
+    console.log("Deserializing user");
     try {
       const user = await User.findById(id);
       done(null, user);
-    } catch (error) {
-      done(error);
+    } catch (err) {
+      done(err);
     }
   });
 
   passport.use(
     new GraphQLLocalStrategy(async (username, password, done) => {
       try {
-        const user = User.findOne({ username });
+        const user = await User.findOne({ username });
         if (!user) {
           throw new Error("Invalid username or password");
         }
@@ -33,8 +34,8 @@ export const configurePassport = async () => {
         }
 
         return done(null, user);
-      } catch (error) {
-        return done(error);
+      } catch (err) {
+        return done(err);
       }
     })
   );

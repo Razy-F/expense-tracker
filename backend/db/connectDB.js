@@ -4,7 +4,7 @@ import env from "../utils/validateEnv.js";
 export const connectDB = async () => {
   try {
     const conn = await connect(env.MONGO_DB, {
-      dbName: "Expense tracker",
+      dbName: "Expense_tracker",
     });
     console.log(
       `MongoDB Connected: ${conn.connection.host}`.rainbow.underline.bold

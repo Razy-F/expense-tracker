@@ -28,6 +28,7 @@ const MongoDBStore = ConnectMongo(session);
 const store = new MongoDBStore({
   uri: env.MONGO_DB,
   collection: "sessions",
+  databaseName: "Expense_tracker",
 });
 
 store.on("error", (err) => console.log(err));
@@ -41,7 +42,7 @@ app.use(
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
     },
-    store,
+    store: store,
   })
 );
 
@@ -59,12 +60,16 @@ await server.start();
 // Set up our Express middleware to handle CORS, body parsing,
 // and our expressMiddleware function.
 app.use(
-  "/",
-  cors(),
+  "/graphql",
+  cors({
+    origin: env.ORIGIN_URL,
+    credentials: true,
+  }),
   express.json(),
   // expressMiddleware accepts the same arguments:
   // an Apollo Server instance and optional configuration options
   expressMiddleware(server, {
+    //context is basically an object that's shared across all resolvers and we get it as the third argument (parent, argumant, context)
     context: async ({ req, res }) => buildContext({ req, res }),
   })
 );
@@ -73,4 +78,4 @@ app.use(
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
 await connectDB();
 
-console.log(`🚀 Server ready at http://localhost:4000/`.cyan.dim);
+console.log(`🚀 Server ready at http://localhost:4000/graphql`.cyan.dim);

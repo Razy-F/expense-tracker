@@ -1,4 +1,4 @@
-import { handleError } from "../lib/handleError";
+import { handleError } from "../lib/handleError.js";
 import TransactionModel from "../models/transaction.model.js";
 const transactionResolver = {
   Mutation: {
