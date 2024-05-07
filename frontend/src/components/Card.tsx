@@ -5,6 +5,10 @@ import { FaSackDollar } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
 import { HiPencilAlt } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { formatDate } from "../utils/formatDate";
+import { useMutation } from "@apollo/client";
+import { DELETE_TRANSACTION } from "../graphql/mutations";
+import toast from "react-hot-toast";
 
 const categoryColorMap = {
   saving: "from-green-700 to-green-400",
@@ -13,20 +17,56 @@ const categoryColorMap = {
   // Add more categories and corresponding color classes as needed
 };
 
-type Props = {
-  cardType: "saving" | "expense" | "investment";
-};
+const Card = ({
+  transaction: {
+    _id,
+    category,
+    amount,
+    location,
+    date,
+    paymentType,
+    description,
+  },
+}: {
+  transaction: Transaction;
+}) => {
+  description = description[0]?.toUpperCase() + description.slice(1);
+  const categoryLabel = category[0]?.toUpperCase() + category.slice(1);
+  const formattedDate = formatDate(date);
+  const cardClass = categoryColorMap[category];
 
-const Card = ({ cardType }: Props) => {
-  const cardClass = categoryColorMap[cardType];
+  const [deleteTransaction, { loading }] = useMutation(DELETE_TRANSACTION, {
+    refetchQueries: ["GetTransactions"],
+  });
+
+  const handleDelete = async () => {
+    try {
+      await deleteTransaction({
+        variables: {
+          transactionId: _id,
+        },
+      });
+      toast.success("Transaction deleted successfully");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        toast.error(error.message);
+      } else console.error(error);
+    }
+  };
 
   return (
     <div className={`rounded-md p-4 bg-gradient-to-br ${cardClass}`}>
       <div className="flex flex-col gap-3">
         <div className="flex flex-row items-center justify-between">
-          <h2 className="text-lg font-bold text-white">Saving</h2>
+          <h2 className="text-lg font-bold text-white">{categoryLabel}</h2>
           <div className="flex items-center gap-2">
-            <FaTrash className={"cursor-pointer"} />
+            {!loading && (
+              <FaTrash className={"cursor-pointer"} onClick={handleDelete} />
+            )}
+            {loading && (
+              <div className="size-6 border-t-2 border-b-2 rounded-full animate-spin"></div>
+            )}
             <Link to={`/transaction/123`}>
               <HiPencilAlt className="cursor-pointer" size={20} />
             </Link>
@@ -34,22 +74,22 @@ const Card = ({ cardType }: Props) => {
         </div>
         <p className="text-white flex items-center gap-1">
           <BsCardText />
-          Description: Salary
+          Description: {description}
         </p>
         <p className="text-white flex items-center gap-1">
           <MdOutlinePayments />
-          Payment Type: Cash
+          Payment Type: {paymentType}
         </p>
         <p className="text-white flex items-center gap-1">
           <FaSackDollar />
-          Amount: $150
+          Amount: ${amount}
         </p>
         <p className="text-white flex items-center gap-1">
           <FaLocationDot />
-          Location: New York
+          {location ? `Location:${location}` : ""}
         </p>
         <div className="flex justify-between items-center">
-          <p className="text-xs text-black font-bold">21 Sep, 2001</p>
+          <p className="text-xs text-black font-bold">{formattedDate}</p>
           <img
             src={"https://tecdn.b-cdn.net/img/new/avatars/2.webp"}
             className="h-8 w-8 border rounded-full"

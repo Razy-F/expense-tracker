@@ -36,7 +36,7 @@ const transactionResolver = {
     },
   },
   Query: {
-    transactions: async () => {
+    transactions: async (_, __, context) => {
       try {
         if (!context.getUser()) throw new Error("Unauthorized");
         const userId = await context.getUser()._id;

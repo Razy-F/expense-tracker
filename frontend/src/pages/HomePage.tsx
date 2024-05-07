@@ -40,10 +40,13 @@ const HomePage = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      const { data } = await logout();
+      toast.success(data.messege);
     } catch (error) {
-      console.error("Error logging out:", error);
-      toast.error(error.message);
+      if (error instanceof Error) {
+        console.error("Error logging out:", error);
+        toast.error(error.message);
+      } else console.error(error);
     }
   };
 
