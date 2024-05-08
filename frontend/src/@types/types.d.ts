@@ -1,3 +1,6 @@
+type TransactionData = {
+  transactions: Transaction[];
+};
 type Transaction = {
   _id: string;
   userId?: string;

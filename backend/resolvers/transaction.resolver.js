@@ -54,6 +54,42 @@ const transactionResolver = {
         handleError(error, "Get specefic transaction");
       }
     },
+    categoryStatistics: async (_, __, context) => {
+      try {
+        if (!context.getUser()) throw new Error("Unauthorized");
+        const userId = await context.getUser()._id;
+        const transactions = await TransactionModel.find({ userId });
+        const categoryMap = {};
+
+        /*  const transactions = [
+          {category:"expense", amount:50},
+          {category:"expense", amount:75},
+          {category:"investment", amount:100},
+          {category:"savings", amount:30},
+          {category:"savings", amount:20},
+        ] */
+
+        transactions.forEach((transaction) => {
+          if (!categoryMap[transaction.category]) {
+            categoryMap[transaction.category] = 0;
+          }
+          categoryMap[transaction.category] += transaction.amount;
+        });
+
+        /* categoryMap = { expense: 125, investment: 100, savings: 50 }; */
+
+        return Object.entries(categoryMap).map(([category, total]) => ({
+          category,
+          totalAmount,
+        }));
+        // it return array of objects
+        /* return [
+          { category: "expense", totalAmount: 125 },
+          { category: "investment", totalAmount: 125 },
+          { category: "savings", totalAmount: 125 },
+        ]; */
+      } catch (error) {}
+    },
   },
 };
 

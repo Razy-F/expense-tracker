@@ -10,7 +10,7 @@ import { LOGOUT } from "../graphql/mutations";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const HomePage = () => {
-  const [logout, { loading }] = useMutation(LOGOUT, {
+  const [logout, { loading, client }] = useMutation(LOGOUT, {
     refetchQueries: ["GetAuthenticatedUser"],
   });
 
@@ -41,7 +41,9 @@ const HomePage = () => {
   const handleLogout = async () => {
     try {
       const { data } = await logout();
-      toast.success(data.messege);
+      console.log("this the data from the logout() function", data);
+      toast.success(data.logout.messege);
+      client.resetStore();
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error logging out:", error);

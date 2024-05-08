@@ -58,6 +58,7 @@ const userResolver = {
           if (err) throw err;
         });
         context.res.clearCookie("connect.sid");
+        console.log("user logout");
         return { messege: "Logout Successfuly" };
       } catch (error) {
         handleError(error, "logout");

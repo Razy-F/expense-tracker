@@ -30,11 +30,17 @@ const TransactionPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("formData", formData);
-    const amount = parseFloat(formData.amount);
+    //APPROACH 1
+    /* if (!(typeof formData.amount === "number")) {
+      formData.amount = parseFloat(formData.amount);
+    } */
+    // APPROACH 2
+    formData.amount = parseFloat(formData.amount.toString());
+
     try {
       await updateTransaction({
         variables: {
-          input: { ...formData, amount, transactionId: id },
+          input: { ...formData, amount: formData.amount, transactionId: id },
         },
       });
       toast.success("Transaction successfully updated ✔");
