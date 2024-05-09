@@ -16,15 +16,15 @@ const TransactionPage = () => {
 
   const [updateTransaction, { loading: updatingTransactionLoader }] =
     useMutation(UPDATE_TRANSACTION, {
-      refetchQueries: ["GetTransaction"],
+      refetchQueries: ["GetTransaction", "GetCategoryStatistics"],
     });
   const [formData, setFormData] = useState({
-    description: data?.transaction.description || "",
-    paymentType: data?.transaction.paymentType || "",
-    category: data?.transaction.category || "",
-    amount: data?.transaction.amount || "",
-    location: data?.transaction.location,
-    date: data?.transaction.date || "",
+    description: data?.transactions.description || "",
+    paymentType: data?.transactions.paymentType || "",
+    category: data?.transactions.category || "",
+    amount: data?.transactions.amount || "",
+    location: data?.transactions.location,
+    date: data?.transactions.date || "",
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,12 +64,12 @@ const TransactionPage = () => {
   useEffect(() => {
     if (data) {
       setFormData({
-        description: data?.transaction.description,
-        paymentType: data?.transaction.paymentType,
-        category: data?.transaction.category,
-        amount: data?.transaction.amount,
-        location: data?.transaction.location,
-        date: new Date(+data.transaction.date).toISOString().substr(0, 10),
+        description: data?.transactions.description,
+        paymentType: data?.transactions.paymentType,
+        category: data?.transactions.category,
+        amount: data?.transactions.amount,
+        location: data?.transactions.location,
+        date: new Date(+data.transactions.date).toISOString().substr(0, 10),
       });
     }
   }, [data]);

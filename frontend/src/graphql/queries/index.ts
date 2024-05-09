@@ -1,3 +1,13 @@
+import {
+  GET_CATEGORY_STATISTICS,
+  GET_TRANSACTION,
+  GET_TRANSACTIONS,
+} from "./transaction.query";
 import { GET_AUTHENTICATED_USER } from "./users.query";
 
-export { GET_AUTHENTICATED_USER };
+export {
+  GET_AUTHENTICATED_USER,
+  GET_CATEGORY_STATISTICS,
+  GET_TRANSACTION,
+  GET_TRANSACTIONS,
+};

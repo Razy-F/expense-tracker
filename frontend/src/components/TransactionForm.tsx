@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 const TransactionForm = () => {
   // TODO => WE HAVE TO REFECH THE DATA ONCE WE CREATED NEW TRANSACTION SO THE UI GETS UPDATED
   const [newTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
-    refetchQueries: ["GetTransactions"],
+    refetchQueries: ["GetTransactions", "GetCategoryStatistics"],
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

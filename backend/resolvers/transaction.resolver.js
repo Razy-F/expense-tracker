@@ -76,9 +76,10 @@ const transactionResolver = {
           categoryMap[transaction.category] += transaction.amount;
         });
 
+        console.log("This is categoryMap constant: ", categoryMap);
         /* categoryMap = { expense: 125, investment: 100, savings: 50 }; */
 
-        return Object.entries(categoryMap).map(([category, total]) => ({
+        return Object.entries(categoryMap).map(([category, totalAmount]) => ({
           category,
           totalAmount,
         }));
@@ -88,7 +89,21 @@ const transactionResolver = {
           { category: "investment", totalAmount: 125 },
           { category: "savings", totalAmount: 125 },
         ]; */
-      } catch (error) {}
+
+        /* const obj = { 0: "adam", 1: "billy", 2: "chris" };
+
+        console.log(Object.entries(obj));
+        [
+          ["0", "adam"],
+          ["1", "billy"],
+          ["2", "chris"],
+        ];
+
+        console.log(Object.entries(obj).map((line) => console.log(line)));
+        ["0", "adam"][("1", "billy")][("2", "chris")]; */
+      } catch (error) {
+        handleError(error, "categoryStatistics");
+      }
     },
   },
 };
