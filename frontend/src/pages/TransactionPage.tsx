@@ -14,22 +14,26 @@ const TransactionPage = () => {
     },
   });
 
-  const [updateTransaction, { loading: updatingTransactionLoader }] =
-    useMutation(UPDATE_TRANSACTION, {
-      refetchQueries: ["GetTransaction", "GetCategoryStatistics"],
-    });
+  console.log("transactionData:", data);
+
+  const [
+    updateTransaction,
+    { loading: updatingTransactionLoader, error: mutationError },
+  ] = useMutation(UPDATE_TRANSACTION, {
+    refetchQueries: ["GetTransaction", "GetCategoryStatistics"],
+  });
   const [formData, setFormData] = useState({
-    description: data?.transactions.description || "",
-    paymentType: data?.transactions.paymentType || "",
-    category: data?.transactions.category || "",
-    amount: data?.transactions.amount || "",
-    location: data?.transactions.location,
-    date: data?.transactions.date || "",
+    description: data?.transaction.description || "",
+    paymentType: data?.transaction.paymentType || "",
+    category: data?.transaction.category || "",
+    amount: data?.transaction.amount || "",
+    location: data?.transaction.location,
+    date: data?.transaction.date || "",
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("formData", formData);
+    console.log("formDataToUpdate");
     //APPROACH 1
     /* if (!(typeof formData.amount === "number")) {
       formData.amount = parseFloat(formData.amount);
@@ -37,12 +41,18 @@ const TransactionPage = () => {
     // APPROACH 2
     formData.amount = parseFloat(formData.amount.toString());
 
+    console.log({ ...formData, amount: formData.amount, transactionId: id });
+    if (mutationError) {
+      console.error("Mutation error:", mutationError);
+      // You can handle the error here, e.g., show a message to the user
+    }
     try {
       await updateTransaction({
         variables: {
           input: { ...formData, amount: formData.amount, transactionId: id },
         },
       });
+
       toast.success("Transaction successfully updated ✔");
     } catch (error) {
       if (error instanceof Error) {
@@ -64,12 +74,12 @@ const TransactionPage = () => {
   useEffect(() => {
     if (data) {
       setFormData({
-        description: data?.transactions.description,
-        paymentType: data?.transactions.paymentType,
-        category: data?.transactions.category,
-        amount: data?.transactions.amount,
-        location: data?.transactions.location,
-        date: new Date(+data.transactions.date).toISOString().substr(0, 10),
+        description: data?.transaction.description,
+        paymentType: data?.transaction.paymentType,
+        category: data?.transaction.category,
+        amount: data?.transaction.amount,
+        location: data?.transaction.location,
+        date: new Date(+data.transaction.date).toISOString().substr(0, 10),
       });
     }
   }, [data]);

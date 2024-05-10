@@ -1,5 +1,9 @@
-type TransactionData = {
+type TransactionsData = {
   transactions: Transaction;
+};
+
+type TransactionData = {
+  transaction: Transaction;
 };
 type Transaction = {
   _id: string;

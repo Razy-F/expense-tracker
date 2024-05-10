@@ -6,9 +6,10 @@ import { FaTrash } from "react-icons/fa";
 import { HiPencilAlt } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/formatDate";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { DELETE_TRANSACTION } from "../graphql/mutations";
 import toast from "react-hot-toast";
+import { GET_AUTHENTICATED_USER } from "../graphql/queries";
 
 const categoryColorMap = {
   saving: "from-green-700 to-green-400",
@@ -35,6 +36,9 @@ const Card = ({
   const formattedDate = formatDate(date);
   const cardClass = categoryColorMap[category];
 
+  const { data, loading: userAuthLoading } = useQuery<UserData>(
+    GET_AUTHENTICATED_USER
+  );
   const [deleteTransaction, { loading }] = useMutation(DELETE_TRANSACTION, {
     refetchQueries: ["GetTransactions", "GetCategoryStatistics"],
   });
@@ -90,11 +94,15 @@ const Card = ({
         </p>
         <div className="flex justify-between items-center">
           <p className="text-xs text-black font-bold">{formattedDate}</p>
-          <img
-            src={"https://tecdn.b-cdn.net/img/new/avatars/2.webp"}
-            className="h-8 w-8 border rounded-full"
-            alt=""
-          />
+          <div className="w-11 h-11 rounded-full border cursor-pointer shadow-md bg-black/35 flex items-center justify-center text-lg">
+            {loading ? (
+              <div className="w-6 h-6 border-t-2 border-b-2 mx-2 rounded-full animate-spin"></div>
+            ) : (
+              <span className=" text-white font-bold">
+                {data?.authUser.profilePicture}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

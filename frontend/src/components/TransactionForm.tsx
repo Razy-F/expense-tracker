@@ -14,13 +14,14 @@ const TransactionForm = () => {
     const form = e.target;
     if (form instanceof HTMLFormElement) {
       const formData = new FormData(form);
+      const AmountParse = parseFloat(formData.get("amount"));
+      console.log("amount parse");
+      console.log(AmountParse);
       const transactionData = {
         description: formData.get("description"),
         paymentType: formData.get("paymentType"),
         category: formData.get("category"),
-        amount: () => {
-          if (formData.get("amount")) return formData.get("amount");
-        },
+        amount: AmountParse,
         location: formData.get("location"),
         date: formData.get("date"),
       };
